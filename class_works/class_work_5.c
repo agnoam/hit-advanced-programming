@@ -7,19 +7,35 @@ typedef struct Node {
 } Node;
 
 /**
- * Allocates and initializes a new node with the given value and next pointer.
+ * Creates a new node with the given value.
  * 
  * @param value The value to be stored in the node.
- * @param next A pointer to the next node in the linked list.
- * 
- * @return Node* Pointer to the newly created node.
+ * @return Pointer to the newly created node, or NULL if allocation failed.
  */
-Node* create_node(int value, Node* next) {
+Node* create_node(int value) {
     Node* node = malloc(sizeof(Node));
+    if (!node)
+        return NULL;
+
     node->value = value;
     node->next = NULL;
 
     return node;
+}
+
+/**
+ * Appends a new node to the end of a linked list.
+ * 
+ * @param tail A pointer to the address of the last node in the linked list.
+ * @param new_node Pointer to the new node to be appended.
+ * @return Pointer to the updated tail after the append operation.
+ */
+Node* append_after(Node** tail, Node* new_node) {
+    if (*tail)
+        (*tail)->next = new_node;
+    
+    *tail = new_node;
+    return new_node;
 }
 
 /**
@@ -30,35 +46,22 @@ Node* create_node(int value, Node* next) {
  */
 void construct_lists(Node** even_list, Node** odd_list) {
     int input = -1;
-
     Node* even_last_pointer = *even_list;
     Node* odd_last_pointer = *odd_list;
 
     do {
         // For ingoring the first loop
         if (input != -1) {
-            Node* new_node = create_node(input, NULL);
-
-            if (!(input % 2)) {
-                if (!even_last_pointer) {
-                    even_last_pointer = new_node;
-                } else {
-                    even_last_pointer->next = new_node;
-                    even_last_pointer = new_node;
-                }
-            } else {
-                if (!odd_last_pointer) {
-                    odd_last_pointer = new_node;
-                } else {
-                    odd_last_pointer->next = new_node;
-                    odd_last_pointer = new_node;
-                }
+            Node* new_node = create_node(input);
+            if (!new_node) {
+                fprintf(stderr, "Allocation failed for node with value %d\n", input);
+                return;
             }
 
-            if (!(*even_list))
-                *even_list = even_last_pointer;
-            if (!(*odd_list))
-                *odd_list = odd_last_pointer;
+            if (!(input % 2))
+                even_last_pointer = append_after(!(*even_list) ? even_list : &even_last_pointer, new_node);
+            else
+                odd_last_pointer = append_after(!(*odd_list) ? odd_list : &odd_last_pointer, new_node);
         }
 
         printf("Write positive number (or -1 to stop): ");
