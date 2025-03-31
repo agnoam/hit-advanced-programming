@@ -57,7 +57,7 @@ Node* insert_char(Node** head, char new_char) {
 
     while (current_node) {
         Node* tail_node = current_node->next;
-        if (current_node->value <= new_char && (tail_node && tail_node->value > new_char)) {
+        if (current_node->value <= new_char && (!current_node->next || (tail_node && tail_node->value > new_char))) {
             Node* new_node = allocate_node(new_char, tail_node);
             current_node->next = new_node;
         }
@@ -91,16 +91,38 @@ Node* scan_linked_list() {
     return head;
 }
 
+void reverse_linked_list(Node** head) {
+    if (head == NULL || *head == NULL)
+        return;
+
+    Node* prev = NULL;
+    Node* current = *head;
+    Node* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;  // Store the next node
+        current->next = prev;  // Reverse the current node's next pointer
+        prev = current;        // Move prev and current one step forward
+        current = next;
+    }
+
+    *head = prev;
+}
+
 int main() {
     // printf("Creating sorted list with duplicates:\n");
     // Node* sorted_list = generate_list_with_duplicates(5, 3);
-    
+
     Node* sorted_list = scan_linked_list();
     printf("sorted_list: ");
     print_linked_list(sorted_list);
 
     insert_char(&sorted_list, 'c');
     printf("modified list: ");
+    print_linked_list(sorted_list);
+
+    reverse_linked_list(&sorted_list);
+    printf("reversed list: ");
     print_linked_list(sorted_list);
 
     return 0;
