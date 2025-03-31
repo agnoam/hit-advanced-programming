@@ -28,6 +28,17 @@ void print_linked_list(Node* list) {
     printf(")\n");
 }
 
+/**
+ * Allocates a new node with the given value and next pointer.
+ * 
+ * This function allocates memory for a new node, assigns the provided value to the node's `value` field,
+ * and sets the `next` field to the provided next pointer.
+ * 
+ * @param value The character value to store in the new node.
+ * @param next A pointer to the next node in the list, or NULL if this is the last node.
+ * 
+ * @return A pointer to the newly allocated node.
+ */
 Node* allocate_node(char value, Node* next) {
     Node* new_node = (Node*) malloc(sizeof(Node));
     new_node->value = value;
@@ -36,6 +47,17 @@ Node* allocate_node(char value, Node* next) {
     return new_node;
 }
 
+/**
+ * Generates a linked list of nodes, with possible duplicate characters at a specified interval.
+ * 
+ * This function creates a linked list of nodes where each node contains a character. Every `duplicate_interval`-th node
+ * contains the same character as the previous node, effectively creating duplicates.
+ * 
+ * @param length The total length of the list to generate.
+ * @param duplicate_interval The interval at which duplicates will occur in the list.
+ * 
+ * @return A pointer to the head of the newly created linked list.
+ */
 Node* generate_list_with_duplicates(int length, int duplicate_interval) {
     Node* head = NULL;
     Node* tail = NULL;
@@ -52,6 +74,17 @@ Node* generate_list_with_duplicates(int length, int duplicate_interval) {
     return head;
 }
 
+/**
+ * Inserts a character into a sorted linked list.
+ * 
+ * This function traverses the list and inserts a new character into the list such that the list remains sorted.
+ * The list is assumed to be sorted in ascending order, and the new character will be inserted at the appropriate position.
+ * 
+ * @param head A pointer to the head of the linked list.
+ * @param new_char The new character to insert into the list.
+ * 
+ * @return A pointer to the head of the modified linked list.
+ */
 Node* insert_char(Node** head, char new_char) {
     Node* current_node = (*head);
 
@@ -68,6 +101,14 @@ Node* insert_char(Node** head, char new_char) {
     return (*head);
 }
 
+/**
+ * Prompts the user to enter characters to create a linked list.
+ * 
+ * This function repeatedly asks the user to enter characters to create a linked list. The user can stop the process
+ * by entering the character '0'. The function will return the head of the linked list created.
+ * 
+ * @return A pointer to the head of the linked list created from user input.
+ */
 Node* scan_linked_list() {
     Node* head = NULL;
     Node* tail = NULL;
@@ -91,6 +132,14 @@ Node* scan_linked_list() {
     return head;
 }
 
+/**
+ * Reverses the linked list.
+ * 
+ * This function reverses the order of nodes in the linked list by changing the direction of the `next` pointers.
+ * After this operation, the head of the list will point to the last node in the original list.
+ * 
+ * @param head A pointer to the head of the linked list.
+ */
 void reverse_linked_list(Node** head) {
     if (head == NULL || *head == NULL)
         return;
