@@ -110,9 +110,9 @@ void free_list(Node* list) {
 /**
  * Calcualtes the `sum`, `min` and `max values of the given linked list
  * 
- * @param head - The linked list head node
- * @param min - Pointer to the min variable to modify (auto initialize)
- * @param max - Pointer to the max variable to modify (auto initialize)
+ * @param head The linked list head node
+ * @param min Pointer to the min variable to modify (auto initialize)
+ * @param max Pointer to the max variable to modify (auto initialize)
  * 
  * @returns The sum of the list
  */
