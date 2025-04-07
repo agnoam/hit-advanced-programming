@@ -107,16 +107,49 @@ void free_list(Node* list) {
     }
 }
 
+/**
+ * Calcualtes the `sum`, `min` and `max values of the given linked list
+ * 
+ * @param head - The linked list head node
+ * @param min - Pointer to the min variable to modify (auto initialize)
+ * @param max - Pointer to the max variable to modify (auto initialize)
+ * 
+ * @returns The sum of the list
+ */
+int get_sum_min_max(Node* head, int* min, int* max) {
+    int sum = 0;
+
+    *min = INT_MAX;
+    *max = INT_MIN;
+
+    while (head) {
+        sum += head->value;
+        
+        if (head->value < *min) *min = head->value;
+        if (head->value > *max) *max = head->value;
+        head = head->next;
+    }
+
+    return sum;
+}
 
 int main() {
     Node* even_list = NULL;
     Node* odd_list = NULL;
+    int sum, min, max;
 
     construct_lists(&even_list, &odd_list);
+    
     printf("Even list: ");
     print_linked_list(even_list);
+    sum = get_sum_min_max(even_list, &min, &max);
+    printf("sum: %d, min: %d, max: %d\n", sum, min, max);
+    
     printf("Odd list: ");
     print_linked_list(odd_list);
+    sum = get_sum_min_max(odd_list, &min, &max);
+    printf("sum: %d, min: %d, max: %d\n", sum, min, max);
+    
 
     // Disallocating the lists
     if (even_list) free_list(even_list);
