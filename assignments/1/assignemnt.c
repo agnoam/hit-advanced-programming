@@ -107,8 +107,9 @@ void Ex3()
 	/* Write Code Here! */
 }
 
-Number* primeSums(unsigned long long n1, unsigned long long n2, int* p_size)
-{
+Number* primeSums(unsigned long long n1, unsigned long long n2, int* p_size) {
+	// TODO: Allocate dynamic Number* array
+	
 	/* Called functions:
 		isPrime, digitSum */
 	/* Write Code Here! */
