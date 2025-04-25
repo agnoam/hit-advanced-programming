@@ -43,11 +43,13 @@ void createThreeLists(int** A, int rows, int cols, Item** pL1, Item** pL2);
 
 /* Declarations of auxiliary functions */
 // Ex1
+
 int isPrime(int num);
 int digitSum(unsigned long long num);
 void printArray(Number* arr, int size);
 
 // Ex2
+
 int neighborMax(int A[][COLS], int rows, int cols, int i, int j);
 int** allocMatrix(int rows, int cols);
 void inputMatrix(int A[][COLS], int rows, int cols);
@@ -56,18 +58,23 @@ void printDynamicMatrix(int** A, int rows, int cols);
 void freeMatrix(void** A, int rows);
 
 // Ex3
+
 Triad createThree(int i, int j, int value);
 void inputDynamicMatrix(int** A, int rows, int cols);
 void printList(Item* lst);
 void freeList(Item* lst);
+Item* insert(Item** head, Item* tail);
 
 /* Custom function declarations */
+
 void printError(const char *message);
 Number* allocateNumber(unsigned long long num, int sum);
 void appendNumber(Number** arr, Number* newNumber, int* currentLength, int* maxLength);
+Item* createItem(Triad data, Item* next);
 
 /* ------------------------------- */
 
+/* Untouched code from template */
 int main() {
 	int select, i, all_Ex_in_loop = 0;
 	
@@ -121,6 +128,15 @@ void Ex1() {
 	free(outputArr);
 }
 
+/**
+ * Executes a demonstration of the neighbor-maximization process on a matrix.
+ *
+ * A static matrix of size ROWS×COLS is initialized to zero, then populated randomally. 
+ * The original matrix is printed. A dynamic
+ * matrix is then created, which replaces
+ * each element with the maximum of its neighbors. The resulting matrix
+ * is printed, and finally the allocated memory is released.
+ */
 void Ex2() {
 	int** neighborsMatrix = NULL;
 
@@ -134,10 +150,41 @@ void Ex2() {
 	freeMatrix((void**) neighborsMatrix, ROWS);
 }
 
+/**
+ * Interacting with the user to create and process a dynamic matrix, and output it as two linked lists.
+ *
+ * Prompts the user for the desired matrix dimensions, allocates a matrix, and displays it.
+ * Let the user to populate the matrix, then prints the updated matrix.
+ * Generates two linked lists based on matrix values, and prints both lists,
+ * and finally the allocated memory is released.
+ */
 void Ex3() {
-	/* Called functions: 
-		allocMatrix, inputDynamicMatrix, printDynamicMatrix, createThreeLists, printList, freeMatrix, freeList */
-	/* Write Code Here! */
+	int rows, cols;
+	int** matrix = NULL;
+	Item* list1 = NULL;
+	Item* list2 = NULL;
+
+	printf("Enter the number of rows and cols of the wanted matrix to allocate (number > 0 with space between them): ");
+	scanf("%d%d", &rows, &cols);
+
+	matrix = allocMatrix(rows, cols);
+	printf("Allocated matrix before modification: ");
+	printDynamicMatrix(matrix, rows, cols);
+	
+	inputDynamicMatrix(matrix, rows, cols);
+	printf("Updated matrix is: ");
+	printDynamicMatrix(matrix, rows, cols);
+
+	createThreeLists(matrix, rows, cols, &list1, &list2);
+	printf("The output lists are:\n");
+	printf("list1: ");
+	printList(list1);
+	printf("list2: ");
+	printList(list2);
+
+	freeMatrix(matrix, rows);
+	freeList(list1);
+	freeList(list2);
 }
 
 /**
@@ -196,13 +243,47 @@ int** matrixMaxNeighbor(int A[][COLS], int rows, int cols) {
 	return resultMatrix;
 }
 
+/**
+ * Scans a matrix with the given dimensions and populates two linked lists based on cell values:
+ * 
+ * - List 1 receives items for each cell where `A[i][j] == i + j`.
+ * 
+ * - List 2 receives items for each cell where `i < j` and `A[i][j] == j + |i - j|`.
+ *
+ * Each matching cell generates a new Item and inserted into the corresponding list.
+ * The head pointers `pL1` and `pL2` are updated to reference the new list heads.
+ *
+ * @param A Pointer to a `rows`×`cols` matrix of integers.
+ * @param rows Number of rows in matrix `A`.
+ * @param cols Number of columns in matrix `A`.
+ * @param pL1 Pointer to the head pointer of the first linked list. (treated as NULL)
+ * @param pL2 Pointer to the head pointer of the second linked list. (treated as NULL)
+ */
 void createThreeLists(int** A, int rows, int cols, Item** pL1, Item** pL2) {
-	/* Called functions:
-		createThree, insert */
-	/* Write Code Here! */
+	int i, j, delta;
+	Item* newItem;
+	Item* currentL1Head = *pL1 = NULL;
+	Item* currentL2Head = *pL2 = NULL;
+
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			delta = abs(i - j);
+
+			if (A[i][j] == i+j) {
+				newItem = createItem(createThree(i, j, A[i][j]), NULL);
+				currentL1Head = insert(!currentL1Head ? pL1 : &currentL1Head, newItem);
+			} 
+			
+			if (i < j && A[i][j] == j + delta) {
+				newItem = createItem(createThree(i, j, A[i][j]), NULL);
+				currentL2Head = insert(!currentL2Head ? pL2 : &currentL2Head, newItem);
+			}
+		}
+	}
 }
 
 /* Definitions of auxiliary functions */
+
 /**
  * Prints an error message to the standard error stream with an "Error:" prefix.
  *
@@ -262,9 +343,12 @@ void appendNumber(Number** arr, Number* newNumber, int* currentLength, int* maxL
 	}
 
 	/* 
-		Warning: When using (**) - pointer to pointer
-		It's important to refer to the inside array using this syntax `(*arr)[]`.
-		Else the compiler will try to set this at another variable
+		Elaboration about (**): 
+			When using (**) - pointer to pointer
+			It's important to refer to the inside array using this syntax `(*arr)[n]` specifically!.
+			Else the compiler will try to set this at another variable.
+			Because when writing `*arr[n]` it's actually translates into `*(arr + n)` 
+			which will affect other variables by overwriting them and will cause exceptions.
 	*/
 	(*arr)[*currentLength] = *newNumber;
 	(*currentLength)++;
@@ -433,7 +517,6 @@ int neighborMax(int A[][COLS], int rows, int cols, int i, int j) {
  */
 void freeMatrix(void** A, int rows) {
 	int i;
-
 	for (i = 0; i < rows; i++) {
 		if (A[i])
 			free(A[i]);
@@ -443,7 +526,9 @@ void freeMatrix(void** A, int rows) {
 }
 
 /**
- * Allocates memory for a dynamic matrix.
+ * Allocates memory for a dynamic matrix. 
+ * 
+ * The output matrix contains garbage values!
  *
  * @param rows the number of rows in the matrix
  * @param cols the number of columns in the matrix
@@ -470,4 +555,110 @@ int** allocMatrix(int rows, int cols) {
 	}
 
 	return matrix;
+}
+
+/**
+ * Creates a `Triad` struct with the specified values.
+ *
+ * @param i row index for the triad
+ * @param j column index for the triad
+ * @param value integer value to store in the triad
+ * @return a `Triad` struct initialized with the given indices and value
+ */
+Triad createThree(int i, int j, int value) {
+	Triad three;
+	three.i = i;
+	three.j = j;
+	three.value = value;
+	
+	return three;
+}
+
+/**
+ * Allocates and initializes an Item node with the specified data and next pointer.
+ *
+ * @param data Triad containing the values to store in the new node.
+ * @param next Pointer to the next Item in the list, or NULL if this is the last node.
+ * @return Pointer to the newly allocated Item, or NULL if memory allocation fails.
+ */
+Item* createItem(Triad data, Item* next) {
+	Item* newItem = (Item*) malloc(sizeof(Item));
+	newItem->data = data;
+	newItem->next = next;
+
+	return newItem;
+}
+
+/**
+ * Inserts an Item node into a singly linked list.
+ *
+ * @param head double pointer to the current list node (or list head when empty)
+ * @param tail pointer to the Item node to insert
+ * @return pointer to the inserted `Item` node (tail item)
+ */
+Item* insert(Item** head, Item* tail) {
+	if (!(*head)) {
+		*head = tail;
+	} else {
+		(*head)->next = tail;
+	}
+
+	return tail;
+}
+
+/**
+ * Prompts the user to input values into a given dynamically allocated matrix.
+ *
+ * For each cell (i, j), displays a message requesting an integer and stores
+ * the input in `A[i][j]`.
+ *
+ * @param A    pointer to an array of int pointers representing the matrix
+ * @param rows number of rows in the matrix
+ * @param cols number of columns in the matrix
+ */
+void inputDynamicMatrix(int** A, int rows, int cols) {
+	int i, j, input;
+
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			printf("Enter the number in cell (%d, %d) (format - number): ", i, j);
+			scanf("%d", &input);
+			A[i][j] = input;
+		}
+	}
+}
+
+/**
+ * Prints a list of `Triad` items in a formatted sequence.
+ *
+ * @param head Pointer to the head of the list.
+ */
+void printList(Item* head) {
+	if (!head)
+		return;
+
+	printf("(");
+	while (head) {
+		printf(
+			head->next ? "[%d, %d, %d] -> " : "[%d, %d, %d]", 
+			head->data.i, head->data.j, head->data.value
+		);
+
+		head = head->next;
+	}
+	printf(")\n");
+}
+
+/**
+ * Deallocates all nodes in a linked list of `Item`.
+ *
+ * @param lst Pointer to the head of the list to free. If NULL, no action is taken.
+ */
+void freeList(Item* lst) {
+	Item* lastItem;
+	while (lst) {
+		lastItem = lst;
+		lst = lst->next;
+		free(lastItem);
+	}
 }
