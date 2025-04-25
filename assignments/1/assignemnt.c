@@ -42,29 +42,29 @@ int** matrixMaxNeighbor(int A[][COLS], int rows, int cols);
 void createThreeLists(int** A, int rows, int cols, Item** pL1, Item** pL2);
 
 /* Declarations of auxiliary functions */
-// EX1
+// Ex1
 int isPrime(int num);
 int digitSum(unsigned long long num);
 void printArray(Number* arr, int size);
 
-// EX2
+// Ex2
 int neighborMax(int A[][COLS], int rows, int cols, int i, int j);
 int** allocMatrix(int rows, int cols);
+void inputMatrix(int A[][COLS], int rows, int cols);
+void printMatrix(int A[][COLS], int rows, int cols);
+void printDynamicMatrix(int** A, int rows, int cols);
+void freeMatrix(void** A, int rows);
 
+// Ex3
 Triad createThree(int i, int j, int value);
+void inputDynamicMatrix(int** A, int rows, int cols);
+void printList(Item* lst);
+void freeList(Item* lst);
 
 /* Custom function declarations */
 void printError(const char *message);
 Number* allocateNumber(unsigned long long num, int sum);
 void appendNumber(Number** arr, Number* newNumber, int* currentLength, int* maxLength);
-
-void inputMatrix(int A[][COLS], int rows, int cols);
-void printMatrix(int A[][COLS], int rows, int cols);
-void printDynamicMatrix(int** A, int rows, int cols);
-void freeMatrix(void** A, int rows);
-void inputDynamicMatrix(int** A, int rows, int cols);
-void printList(Item* lst);
-void freeList(Item* lst);
 
 /* ------------------------------- */
 
@@ -102,6 +102,7 @@ int main() {
 }
 
 /* Function definitions */
+
 /**
  * Reads a numeric range from standard input, finds all numbers within that range
  * whose digit sums are prime, prints the results, and frees allocated memory.
@@ -167,6 +168,20 @@ Number* primeSums(unsigned long long n1, unsigned long long n2, int* arrLength) 
 	return arr;
 }
 
+/**
+ * Computes a new matrix of the same dimensions, where each element is
+ * replaced by the maximum value among its neighbors in the input matrix.
+ *
+ * For each position (i, j) in the input matrix A, determine the largest value
+ * among all adjacent cells (including diagonals) and stores it in
+ * the corresponding position of the result matrix.
+ *
+ * @param A two-dimensional input array with dimensions [rows][cols]
+ * @param rows number of rows in the input matrix
+ * @param cols number of columns in the input matrix
+ * @return pointer to a newly allocated rows×cols matrix containing
+ * the maximum neighbor values, or NULL if allocation fails
+ */
 int** matrixMaxNeighbor(int A[][COLS], int rows, int cols) {
 	int i, j;
 	int** resultMatrix = allocMatrix(rows, cols);
@@ -305,6 +320,13 @@ void printArray(Number* arr, int length) {
 	printf("]\n");
 }
 
+/**
+ * Fills a static matrix with random integer values.
+ *
+ * @param A the matrix to fill
+ * @param rows the number of rows in the matrix
+ * @param cols the number of columns in the matrix
+ */
 void inputMatrix(int A[][COLS], int rows, int cols) {
 	int i, j, minElement = 1, maxElement = 20;
 	printf("Filling the matrix (static array)");
@@ -316,6 +338,13 @@ void inputMatrix(int A[][COLS], int rows, int cols) {
 	}
 }
 
+/**
+ * Prints the contents of a static matrix to the console.
+ *
+ * @param A the matrix to print
+ * @param rows the number of rows in the matrix
+ * @param cols the number of columns in the matrix
+ */
 void printMatrix(int A[][COLS], int rows, int cols) {
 	int i, j;
 
@@ -330,6 +359,13 @@ void printMatrix(int A[][COLS], int rows, int cols) {
 	printf("]\n");
 }
 
+/**
+ * Prints the contents of a dynamically allocated matrix to the console.
+ *
+ * @param A the matrix to print
+ * @param rows the number of rows in the matrix
+ * @param cols the number of columns in the matrix
+ */
 void printDynamicMatrix(int **A, int rows, int cols) {
 	int i, j;
 
@@ -344,6 +380,14 @@ void printDynamicMatrix(int **A, int rows, int cols) {
 	printf("]\n");
 }
 
+/**
+ * Gets the maximum value from an array of integers.
+ *
+ * @param arr the array to get the maximum from
+ * @param len the length of the array
+ * 
+ * @return the maximum value in the array
+ */
 int getMax(int arr[], int len) {
 	int i, max = INT_MIN;
 	for (i = 0; i < len; i++)
@@ -352,6 +396,20 @@ int getMax(int arr[], int len) {
 	return max;
 }
 
+/**
+ * Finds the maximum neighbor value for a given element in a matrix.
+ * 
+ * It finds the maximum value within these positions of any given index if available: 
+ * (top), (right), (bottom), (left) in this order
+ *
+ * @param A the matrix
+ * @param rows the number of rows in the matrix
+ * @param cols the number of columns in the matrix
+ * @param i the row index of the element
+ * @param j the column index of the element
+ * 
+ * @return the maximum neighbor value
+ */
 int neighborMax(int A[][COLS], int rows, int cols, int i, int j) {
 	int neighbors[4] = { INT_MIN, INT_MIN, INT_MIN, INT_MIN };
 
@@ -367,6 +425,12 @@ int neighborMax(int A[][COLS], int rows, int cols, int i, int j) {
 	return getMax(neighbors, 4);
 }
 
+/**
+ * Frees the memory allocated for a dynamically allocated matrix.
+ *
+ * @param A pointer to the matrix
+ * @param rows the number of rows in the matrix
+ */
 void freeMatrix(void** A, int rows) {
 	int i;
 
@@ -378,6 +442,14 @@ void freeMatrix(void** A, int rows) {
 	free(A);
 }
 
+/**
+ * Allocates memory for a dynamic matrix.
+ *
+ * @param rows the number of rows in the matrix
+ * @param cols the number of columns in the matrix
+ * 
+ * @return a pointer to the allocated matrix, or NULL if allocation fails
+ */
 int** allocMatrix(int rows, int cols) {
 	int i;
 	int** matrix = (int**) calloc(rows, sizeof(int*));
