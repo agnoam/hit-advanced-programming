@@ -9,7 +9,8 @@
 /* Libraries */
 #include <stdio.h>
 #include <malloc.h>
-#include <math.h>
+#include <math.h> // For using sqrt
+#include <time.h> // For using random
 
 /* Constant definitions */
 #define N 3
@@ -41,17 +42,22 @@ int** matrixMaxNeighbor(int A[][COLS], int rows, int cols);
 void createThreeLists(int** A, int rows, int cols, Item** pL1, Item** pL2);
 
 /* Declarations of auxiliary functions */
+// EX1
 int isPrime(int num);
 int digitSum(unsigned long long num);
+void printArray(Number* arr, int size);
 
+// EX2
 int neighborMax(int A[][COLS], int rows, int cols, int i, int j);
 int** allocMatrix(int rows, int cols);
 
 Triad createThree(int i, int j, int value);
 
-// insert - to declare the function yourself
+/* Custom function declarations */
+void printError(const char *message);
+Number* allocateNumber(unsigned long long num, int sum);
+void appendNumber(Number** arr, Number* newNumber, int* currentLength, int* maxLength);
 
-void printArray(Number* arr, int size);
 void inputMatrix(int A[][COLS], int rows, int cols);
 void printMatrix(int A[][COLS], int rows, int cols);
 void printDynamicMatrix(int** A, int rows, int cols);
@@ -115,9 +121,16 @@ void Ex1() {
 }
 
 void Ex2() {
-	/* Called functions: 
-		inputMatrix, printMatrix, matrixMaxNeighbor, printDynamicMatrix, freeMatrix */
-	/* Write Code Here! */
+	int** neighborsMatrix = NULL;
+
+	int matrix[ROWS][COLS] = { 0 }; // Filling the matrix with 0's
+	inputMatrix(matrix, ROWS, COLS);
+	printf("The generated matrix is: ");
+	printMatrix(matrix, ROWS, COLS);
+	neighborsMatrix = matrixMaxNeighbor(matrix, ROWS, COLS);
+	printf("The output matrix is: ");
+	printDynamicMatrix(neighborsMatrix, ROWS, COLS);
+	freeMatrix((void**) neighborsMatrix, ROWS);
 }
 
 void Ex3() {
@@ -126,6 +139,55 @@ void Ex3() {
 	/* Write Code Here! */
 }
 
+/**
+ * Builds an array of Number structs for all integers in the range [n1, n2)
+ * whose digit sums are prime.
+ *
+ * @param n1 lower bound of the range (inclusive)
+ * @param n2  upper bound of the range (exclusive)
+ * @param arrLength pointer to an int where the count of returned elements will be stored
+ * @return pointer to a dynamically allocated array of Number structs;
+ *		the caller is responsible for freeing this memory
+ */
+Number* primeSums(unsigned long long n1, unsigned long long n2, int* arrLength) {
+	int i, currentSum;
+	Number* currentNum;
+	
+	Number* arr = NULL;
+	int arrMaxSize;
+	
+	for (i = n1; i < n2; i++) {
+		currentSum = digitSum(i);
+		currentNum = allocateNumber(i, currentSum);
+
+		if (isPrime(currentSum))
+			appendNumber(&arr, currentNum, arrLength, &arrMaxSize);
+	}
+
+	return arr;
+}
+
+int** matrixMaxNeighbor(int A[][COLS], int rows, int cols) {
+	int i, j;
+	int** resultMatrix = allocMatrix(rows, cols);
+	if (!resultMatrix)
+		return NULL;
+
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++)
+			resultMatrix[i][j] = neighborMax(A, rows, cols, i, j);
+	}
+
+	return resultMatrix;
+}
+
+void createThreeLists(int** A, int rows, int cols, Item** pL1, Item** pL2) {
+	/* Called functions:
+		createThree, insert */
+	/* Write Code Here! */
+}
+
+/* Definitions of auxiliary functions */
 /**
  * Prints an error message to the standard error stream with an "Error:" prefix.
  *
@@ -232,60 +294,108 @@ void printArray(Number* arr, int length) {
 	int i;
 	printf("nums: [");
 	for (i = 0; i < length; i++) {
-		printf(i == length - 1 ? "%05d" : "%05d, ", arr[i].num);
+		printf(i == length - 1 ? "%5d" : "%5d, ", arr[i].num);
 	}
 	printf("]\n");
 
 	printf("sums: [");
 	for (i = 0; i < length; i++) {
-		printf(i == length - 1 ? "%05d" : "%05d, ", arr[i].sum);
+		printf(i == length - 1 ? "%5d" : "%5d, ", arr[i].sum);
 	}
 	printf("]\n");
 }
 
-/**
- * Builds an array of Number structs for all integers in the range [n1, n2)
- * whose digit sums are prime.
- *
- * @param n1 lower bound of the range (inclusive)
- * @param n2  upper bound of the range (exclusive)
- * @param arrLength pointer to an int where the count of returned elements will be stored
- * @return pointer to a dynamically allocated array of Number structs;
- *		the caller is responsible for freeing this memory
- */
-Number* primeSums(unsigned long long n1, unsigned long long n2, int* arrLength) {
-	int i, currentSum;
-	Number* currentNum;
-	
-	Number* arr = NULL;
-	int arrMaxSize;
-	
-	for (i = n1; i < n2; i++) {
-		currentSum = digitSum(i);
-		currentNum = allocateNumber(i, currentSum);
+void inputMatrix(int A[][COLS], int rows, int cols) {
+	int i, j, minElement = 1, maxElement = 20;
+	printf("Filling the matrix (static array)");
 
-		if (isPrime(currentSum))
-			appendNumber(&arr, currentNum, arrLength, &arrMaxSize);
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			A[i][j] = rand() % (minElement - maxElement + 1) + minElement;
+		}
+	}
+}
+
+void printMatrix(int A[][COLS], int rows, int cols) {
+	int i, j;
+
+	printf("[\n");
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			printf(j == cols-1 ? "%3d" : "%3d, ", A[i][j]);
+		}
+
+		printf("\n");
+	}
+	printf("]\n");
+}
+
+void printDynamicMatrix(int **A, int rows, int cols) {
+	int i, j;
+
+	printf("[\n");
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			printf(j == cols-1 ? "%3d" : "%3d, ", A[i][j]);
+		}
+
+		printf("\n");
+	}
+	printf("]\n");
+}
+
+int getMax(int arr[], int len) {
+	int i, max = INT_MIN;
+	for (i = 0; i < len; i++)
+		if (arr[i] > max) max = arr[i];
+	
+	return max;
+}
+
+int neighborMax(int A[][COLS], int rows, int cols, int i, int j) {
+	int neighbors[4] = { INT_MIN, INT_MIN, INT_MIN, INT_MIN };
+
+	if (i > 0)
+		neighbors[0] = A[i-1][j];
+	if (j < cols-1)
+		neighbors[1] = A[i][j+1];
+	if (i < rows-1)
+		neighbors[2] = A[i+1][j];
+	if (j > 0)
+		neighbors[3] = A[i][j-1];
+				
+	return getMax(neighbors, 4);
+}
+
+void freeMatrix(void** A, int rows) {
+	int i;
+
+	for (i = 0; i < rows; i++) {
+		if (A[i])
+			free(A[i]);
 	}
 
-	return arr;
+	free(A);
 }
 
-int** matrixMaxNeighbor(int A[][COLS], int rows, int cols)
-{
-	/* Called functions:
-		neighborMax, allocMatrix */
-	/* Write Code Here! */
+int** allocMatrix(int rows, int cols) {
+	int i;
+	int** matrix = (int**) calloc(rows, sizeof(int*));
+	if (!matrix) {
+		printError("Matrix allocation failed! (allocMatrix)");
+		return NULL;
+	}
+
+	for (i = 0; i < rows; i++) {
+		int* row = (int*) malloc(sizeof(int) * cols);
+		if (!row) {
+			printError("Matrix allocation failed! (allocMatrix)");
+			freeMatrix((void**) matrix, rows);
+			return NULL;
+		}
+
+		matrix[i] = row;
+	}
+
+	return matrix;
 }
-void createThreeLists(int** A, int rows, int cols, Item** pL1, Item** pL2)
-{
-	/* Called functions:
-		createThree, insert */
-	/* Write Code Here! */
-}
-
-/* Definitions of auxiliary functions */
-
-/* Write Definitions Here! */
-
-/* ------------------- */
