@@ -391,6 +391,12 @@ int isPrime(int num) {
  */
 void printArray(Number* arr, int length) {
 	int i;
+
+	if (!arr) {
+		printf("NULL\n");
+		return;
+	}
+
 	printf("nums: [");
 	for (i = 0; i < length; i++) {
 		printf(i == length - 1 ? "%5d" : "%5d, ", arr[i].num);
@@ -432,6 +438,11 @@ void inputMatrix(int A[][COLS], int rows, int cols) {
 void printMatrix(int A[][COLS], int rows, int cols) {
 	int i, j;
 
+	if (!A) {
+		printf("NULL\n");
+		return;
+	}
+
 	printf("[\n");
 	for (i = 0; i < rows; i++) {
 		for (j = 0; j < cols; j++) {
@@ -452,6 +463,11 @@ void printMatrix(int A[][COLS], int rows, int cols) {
  */
 void printDynamicMatrix(int **A, int rows, int cols) {
 	int i, j;
+
+	if (!A) {
+		printf("NULL\n");
+		return;
+	}
 
 	printf("[\n");
 	for (i = 0; i < rows; i++) {
@@ -634,8 +650,10 @@ void inputDynamicMatrix(int** A, int rows, int cols) {
  * @param head Pointer to the head of the list.
  */
 void printList(Item* head) {
-	if (!head)
+	if (!head) {
+		printf("NULL\n");
 		return;
+	}
 
 	printf("(");
 	while (head) {
