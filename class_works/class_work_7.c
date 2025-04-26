@@ -126,7 +126,7 @@ void switch_cols(int** matrix, int rows, int col_a, int col_b) {
 }
 
 int main() {
-    int** matrix = construct_matrix(3,3);
+    int** matrix = construct_matrix(3, 3);
     if (!matrix)
         exit(ENOMEM); // Error - memory allocation failed
 

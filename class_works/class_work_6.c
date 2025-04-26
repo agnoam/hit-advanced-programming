@@ -115,7 +115,7 @@ Node* scan_linked_list() {
     char input;
 
     do {
-        printf("Enter a character (0 to stop): ");
+        printf("Enter a single character at a time to form a linked list from it (enter 0 to stop): ");
         scanf("%c", &input);
         rewind(stdin); // Deleting the last \n
 
