@@ -11,38 +11,40 @@
         Is the object block for passing multiple values within one return statement (like in or from a function).
         The declaration is as follows:
         ```
-            struct <StructName> {
+            struct <struct_name> {
                 <property type> property_name;
                 <property type> another_property;
             };
         ```
+
+        For the specific naming convensions read the README.md
         
         Definition example:
         ```
-            struct Person {
+            struct person {
                 char name[30];
                 int age;
             };
         ```
 
-        In order to use it in the code you should state it as follows: `struct Person person_a;`
+        In order to use it in the code you should state it as follows: `struct person person_a;`
         But this kind of statements are bad practice in any language, so the advancment is better,
         it's more complex, but it easier to use across the code.
 
         Implementation like the follows.
 */
-typedef struct Complex {
+typedef struct complex {
     double real;
     double img;
 } Complex;
 
-typedef struct Student {
+typedef struct student {
     char name[30];
     int id_card;
     int grade;
 } Student;
 
-typedef struct Apartment {
+typedef struct apartment {
     char address[30];
     int rooms;
     double price;
@@ -130,11 +132,12 @@ Complex multiply_complex(Complex* a, Complex* b) {
  * and then computes and displays their sum, subtraction, and multiplication results.
  */
 void complex_number_handler() {
-    struct Complex complex_num_1;
+    // Also valid command: `struct complex complex_num_1;`
+    Complex complex_num_1;
     gen_complex(&complex_num_1);
     
     printf("\n");
-    struct Complex complex_num_2;
+    Complex complex_num_2;
     gen_complex(&complex_num_2);
     
     printf("first number: ");

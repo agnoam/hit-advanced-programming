@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node {
+typedef struct node {
     int value;
-    struct Node* next;
+    struct node* next;
 } Node;
 
 /**
