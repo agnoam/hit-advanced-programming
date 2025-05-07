@@ -1,6 +1,10 @@
 Advanced programming course HIT:
 
-In this course we discuss of more advanced aspects in the broader programming such as `Linked List` and `2d array` (matrix) structures, and `c` challenges such as linked list deallocation.
+In this course we discuss more advanced aspects in the broader programming, such as: `Linked List` vs. `Array List` and `2d array` (matrix) structures, and `c` challenges such as linked list deallocation.
+
+## Elaboration:
+Here is a list of links that gives some elaboration about the course's subjects: <br/>
+- [ArrayList vs. Linked List](https://www.youtube.com/watch?v=xFMXIgvlgcY)
 
 ## Requirements:
 - GCC

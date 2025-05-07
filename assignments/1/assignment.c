@@ -313,8 +313,8 @@ Number* allocateNumber(unsigned long long num, int sum) {
 }
 
 /**
- * Appends a Number struct to a dynamically growing array, expanding its capacity as needed.
- *
+ * Appends a Number struct to a "dynamically growing array" (a.k.a. Array List), expanding its capacity as needed.
+ * 
  * @param arr address of the pointer to the `Number` array, may be NULL initially
  * @param newNumber pointer to the `Number` instance to append to the array
  * @param currentLength address of the variable tracking the current number of elements in the array
