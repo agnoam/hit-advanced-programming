@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include "../black_box.c"
 
-
+/**
+ * Generates a file with "hard-coded" in case the file is not already exists
+ * @param filename The filename to check to create if not exists
+ */
 void write_file_if_not_exists(char* filename) {
     FILE *target = fopen(filename, "r");
     
@@ -19,13 +22,19 @@ void write_file_if_not_exists(char* filename) {
     fclose(target);
 }
 
-
+/**
+ * Counts the lines in a given target file
+ * 
+ * @param filename The filename to count the lines in
+ * @return File's line count (empty lines included). In case the file not exists the line count will be -1
+ */
 int count_lines(char *filename) {
     int line_count = 1;
     FILE* file = fopen(filename, "r");
     if (!file)
         return -1;
 
+    /* This is an example of iterating over the file using while loop */
     char current_char = getc(file);
     while (current_char != EOF) {
         if (current_char == '\n')
@@ -37,18 +46,24 @@ int count_lines(char *filename) {
     return line_count;
 }
 
-
+/**
+ * Counts each letter frequency in the file, not case sensitive.
+ * 
+ * @param filename Filename of the target file to examine
+ * @param counts Static array for storing the results, should be 26 elements long. Can be unintialized.
+ */
 void letter_frequency(char *filename, int counts[26]) {
     // Resetting the array
     for (int i = 0; i < 26; i++)
         counts[i] = 0;
 
-    FILE* file = fopen(filename, "r");
+    FILE *file = fopen(filename, "r");
     if (!file) {
         perror("File does not exists");
         return;
     }
 
+    /* Example of iterating over a file using the for loop (lines efficient) */
     for (char current_char = getc(file); current_char != EOF; current_char = getc(file)) {
         if (current_char >= 'a' && current_char <= 'z')
             counts[current_char - 'a']++;
@@ -59,7 +74,12 @@ void letter_frequency(char *filename, int counts[26]) {
     fclose(file);
 }
 
-
+/**
+ * Creating a spaceless duplicate file
+ * 
+ * @param infile The target input filename
+ * @param outfile The filename of the spaceless output file
+ */
 void remove_spaces(char *infile, char *outfile) {
     FILE *input_file = fopen(infile, "r");
     FILE *output_file = fopen(outfile, "w");
