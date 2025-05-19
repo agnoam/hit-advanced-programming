@@ -1,3 +1,8 @@
+/*
+	Disclaimer:
+	This code is not following the recommended `c` naming conventions, 
+	in contrast to the rest of this repository. Because of the strict submition instructions.
+*/
 #define _CRT_SECURE_NO_WARNINGS
  
 /* Libraries */
@@ -61,9 +66,15 @@ int main() {
 
 /* Function definitions */
 void Ex1() {
-	/* Called functions: 
-		split, printStringsArray, freeMatrix */
-	/* Write Code Here! */
+	int p_size = -1;
+    char str[] = "Rony Goodman got a good mark";
+    char** splitted_arr = split('g', str, &p_size);
+    if (!splitted_arr)
+		return;
+
+	printf("The array is: ");
+    printStringsArray(splitted_arr, p_size);
+	freeMatrix(splitted_arr, p_size);
 }
 
 void Ex2() {
@@ -102,8 +113,8 @@ int is_same_letter(char a, char b) {
 	}
 
 	if (a_delta == -1 || b_delta == -1)
-		return a == b; // Exact match
-	return a_delta == b_delta; // Non case sensitive
+		return a == b; // Exact match (including signs as well, such as: '$', '/', etc.)
+	return a_delta == b_delta; // case-insensitive
 }
 
 /**
@@ -226,5 +237,16 @@ void decode(char* text) {
 }
 
 /* Definitions of auxiliary functions */
+void printStringsArray(char** str_arr, int size) {
+	printf("[");
+    for (int i = 0; i < size; i++)
+        printf(i == size-1 ? "%s" : "%s, ", str_arr[i]);
+    printf("]\n");
+}
 
+void freeMatrix(void** A, int rows) {
+	for (int i = 0; i < rows; i++)
+		free(A[i]);
+	free(A);
+}
 /* ------------------- */
