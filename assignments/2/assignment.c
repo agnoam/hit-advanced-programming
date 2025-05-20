@@ -14,6 +14,7 @@
 #define N 3
 
 /* Function declarations */
+
 void Ex1();
 void Ex2();
 void Ex3();
@@ -24,6 +25,7 @@ char commonestLetter(char* filename);
 void decode(char* text);
 
 /* Declarations of auxiliary functions */
+
 void printStringsArray(char** str_arr, int size);
 void freeMatrix(void** A, int rows);
 
@@ -74,7 +76,7 @@ void Ex1() {
 
 	printf("The array is: ");
     printStringsArray(splitted_arr, p_size);
-	freeMatrix(splitted_arr, p_size);
+	freeMatrix((void**) splitted_arr, p_size);
 }
 
 void Ex2() {
@@ -237,6 +239,13 @@ void decode(char* text) {
 }
 
 /* Definitions of auxiliary functions */
+
+/**
+ * Prints an array of strings to the console.
+ *
+ * @param str_arr A pointer to an array of character pointers (strings).
+ * @param size The number of strings in the array.
+ */
 void printStringsArray(char** str_arr, int size) {
 	printf("[");
     for (int i = 0; i < size; i++)
@@ -244,6 +253,12 @@ void printStringsArray(char** str_arr, int size) {
     printf("]\n");
 }
 
+/**
+ * Frees a dynamically allocated 2D matrix (array of pointers).
+ *
+ * @param A A pointer to the array of pointers representing the matrix.
+ * @param rows The number of rows in the matrix.
+ */
 void freeMatrix(void** A, int rows) {
 	for (int i = 0; i < rows; i++)
 		free(A[i]);
