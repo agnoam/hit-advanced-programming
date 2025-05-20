@@ -29,6 +29,13 @@ void decode(char* text);
 void printStringsArray(char** str_arr, int size);
 void freeMatrix(void** A, int rows);
 
+// Manually added
+
+int is_same_letter(char a, char b);
+char* init_dynamic_str(int length);
+void append_char(char* str, char char_to_append, int pos, int max_length);
+void* modify_arr_length(void* arr, size_t shrinked_size);
+
 /* ------------------------------- */
 int main() {
 	int select = 0, i, all_Ex_in_loop = 0;
@@ -67,6 +74,22 @@ int main() {
 
 
 /* Function definitions */
+
+/**
+ * Implementation of the instructions of question 1
+ * 
+ * Split a given string which declared in the `str[]` variable. 
+ * The function will print all the words, which starting with the specified `letter`.
+ * The function is case-insensitive
+ */
+
+/**
+ * Implementation of the instructions of question 1
+ * 
+ * Split a given string which declared in the `str[]` variable. 
+ * The function will print all the words, which starting with the specified `letter`.
+ * The function is case-insensitive
+ */
 void Ex1() {
 	int p_size = -1;
     char str[] = "Rony Goodman got a good mark";
