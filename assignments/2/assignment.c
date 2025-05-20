@@ -78,16 +78,9 @@ int main() {
 /**
  * Implementation of the instructions of question 1
  * 
- * Split a given string which declared in the `str[]` variable. 
+ * Split a hard-coded string which declared in the `char str[]` variable. 
  * The function will print all the words, which starting with the specified `letter`.
- * The function is case-insensitive
- */
-
-/**
- * Implementation of the instructions of question 1
  * 
- * Split a given string which declared in the `str[]` variable. 
- * The function will print all the words, which starting with the specified `letter`.
  * The function is case-insensitive
  */
 void Ex1() {
@@ -108,10 +101,19 @@ void Ex2() {
 	/* Write Code Here! */
 }
 
+/**
+ * Implementation of the instructions of question 3
+ * 
+ * Demonstrates the usage of the decode function using hard-coded example which can be changed
+ * by updating the `char str_to_decode[]`.
+ * It initializes a string, prints its original state, decodes it using `decode()`,
+ * and then prints the decoded string.
+ */
 void Ex3() {
-	/* Called functions:
-		decode */
-	/* Write Code Here! */
+    char str_to_decode[] = "bc8 d";
+    printf("str before decoding: %s\n", str_to_decode);
+    decode(str_to_decode);
+    printf("str: %s\n", str_to_decode);
 }
 
 /**
@@ -257,8 +259,30 @@ char commonestLetter(char* filename) {
 	/* Write Code Here! */
 }
 
+/**
+ * Decodes a given text string in place.
+ *
+ * @param text A pointer to the null-terminated string to be decoded.
+ * The string will be modified directly.
+ */
 void decode(char* text) {
-	/* Write Code Here! */
+	int i = 0, valid_char_count = 0;
+
+	while (text[i]) {
+		if (text[i] == ' ') {
+			i++;
+			
+			/* 
+				There is a mismatch between the question oreders and the example. 
+				In order to match the function logic as the exact question instructions, you can comment the following line:
+			*/
+			valid_char_count = 0;
+			continue;
+		}
+		
+		text[i] -= (++valid_char_count);
+		i++;
+	}
 }
 
 /* Definitions of auxiliary functions */
