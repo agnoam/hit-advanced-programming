@@ -12,6 +12,7 @@
 
 /* Constant definitions */
 #define N 3
+#define STDIN_BUFFER_SIZE 512 // Maximum characters per line, adjust as needed
 
 /* Function declarations */
 
@@ -76,7 +77,7 @@ int main() {
 /* Function definitions */
 
 /**
- * Implementation of the instructions of question 1
+ * Implementation of the instructions of question 1:
  * 
  * Split a hard-coded string which declared in the `char str[]` variable. 
  * The function will print all the words, which starting with the specified `letter`.
@@ -95,14 +96,24 @@ void Ex1() {
 	freeMatrix((void**) splitted_arr, p_size);
 }
 
+/**
+ * Implementation of the instructions of question 2:
+ * 
+ * This function first calls `createFile` to allow the user to input content
+ * into a file named in a specific variable. After the file is created and populated,
+ * it then calls `commonestLetter` to determine the most frequently occurring
+ * letter (case-insensitive) within that file, and prints the result to the console.
+ */
 void Ex2() {
-	/* Called functions: 
-		createFile, commonestLetter */
-	/* Write Code Here! */
+	char* file_to_write = "testfile.dump";
+	createFile(file_to_write);
+	char letter = commonestLetter(file_to_write);
+
+	printf("Commnest letter in the given file is: %c\n", letter);
 }
 
 /**
- * Implementation of the instructions of question 3
+ * Implementation of the instructions of question 3:
  * 
  * Demonstrates the usage of the decode function using hard-coded example which can be changed
  * by updating the `char str_to_decode[]`.
@@ -251,12 +262,87 @@ char** split(char letter, char* str, int* arr_length) {
 	return shrinked_arr;
 }
 
+/**
+ * Creates or appends to a text file by taking user input line by line
+ *
+ * @param filename A null-terminated string representing the path to the target file.
+ * If the file does not exist, it will be created. If it exists,
+ * new content will be appended to its end.
+ * 
+ * @warning The `STDIN_BUFFER_SIZE` macro is expected to be defined and determines
+ * the maximum length of a line the user can input.
+ */
 void createFile(char* filename) {
-	/* Write Code Here! */
+	// Using the AOF approach (always append file)
+	FILE* target_file = fopen(filename, "a");
+
+	char str[STDIN_BUFFER_SIZE] = "";
+	int is_first = 1;
+	rewind(stdin);
+
+	do {
+		!is_first && fputs(str, target_file); // Will automatically will write all the text until the \0
+		
+		printf("Enter the next line to append to the file (max length 512 letters, EOF / Ctrl+D / Ctrl+Z to end): ");
+		
+		/* 
+			Stopping the loop in case there is no data received using Ctrl+D (Unix/Linux) or Ctrl+Z (Windows)
+
+			Elaboration:
+			fgets will return NULL in case a stop command will be received such as Ctrl+d / Ctrl+z
+			otherwise it will return a pointer to the buffer
+		*/ 
+		if (!fgets(str, STDIN_BUFFER_SIZE, stdin))
+			break;
+
+		if (!strcmp(str, "\n"))
+			rewind(stdin);
+
+		is_first = 0;
+	} while (strcmp(str, "EOF\n")); // strcmp return 0 when both of the strings matching
+	
+	printf("Closing the file\n");
+	fclose(target_file);
 }
 
+/**
+ * Finds the most common letter in a given text file, case-insensitively.
+ *
+ * This function reads the content of the specified file character by character,
+ * counts the occurrences of each letter (without special characters), treating uppercase and
+ * lowercase versions of the same letter as identical. It then determines and
+ * returns the letter that appears most frequently.
+ *
+ * @param filename A null-terminated string representing the path to the file to be analyzed.
+ * @return The most common letter (returned as an uppercase character) found in the file.
+ * Returns `\0` if the file cannot be opened or is empty.
+ */
 char commonestLetter(char* filename) {
-	/* Write Code Here! */
+	int letter_counter[26] = { 0 };
+	
+	FILE* target_file = fopen(filename, "r");
+	if (!target_file)
+		return '\0';
+
+	while(!feof(target_file)) {
+		char current_char = getc(target_file);
+		if (current_char >= 'a' && current_char <= 'z') {
+			letter_counter[current_char - 'a']++;
+		} else if (current_char >= 'A' && current_char <= 'Z') {
+			letter_counter[current_char - 'A']++;
+		} 
+	}
+
+	char max_letter = '\0';
+	int count = 0;
+	for (int i = 25; i >= 0; i--) {
+		if (letter_counter[i] > count) {
+			count = letter_counter[i];
+			max_letter = 'A' + i;
+		}
+	}
+
+	return max_letter;
 }
 
 /**
