@@ -12,6 +12,7 @@
 
 /* Constant definitions */
 #define N 3
+#define Q1_BUFFER_SIZE 100 // Defined in the instructions
 #define STDIN_BUFFER_SIZE 512 // Maximum characters per line, adjust as needed
 
 /* Function declarations */
@@ -85,9 +86,24 @@ int main() {
  * The function is case-insensitive
  */
 void Ex1() {
+	char** splitted_arr;
 	int p_size = -1;
-    char str[] = "Rony Goodman got a good mark";
-    char** splitted_arr = split('g', str, &p_size);
+    char str[Q1_BUFFER_SIZE] = "";
+	char letter;
+    
+	rewind(stdin);
+	printf("Enter the string to split: ");
+	
+	// Equal to the line: `fgets(str, Q1_BUFFER_SIZE, stdin) == EOF`
+	if (!fgets(str, Q1_BUFFER_SIZE, stdin)) {
+		printf("There is no input received. Exiting.");
+		return;
+	}
+
+	printf("Enter letter to split by: ");
+	scanf("%c", &letter);
+	
+	splitted_arr = split(letter, str, &p_size);
     if (!splitted_arr)
 		return;
 
@@ -105,7 +121,7 @@ void Ex1() {
  * letter (case-insensitive) within that file, and prints the result to the console.
  */
 void Ex2() {
-	char* file_to_write = "testfile.dump";
+	char* file_to_write = "input.txt";
 	createFile(file_to_write);
 	char letter = commonestLetter(file_to_write);
 
@@ -121,10 +137,10 @@ void Ex2() {
  * and then prints the decoded string.
  */
 void Ex3() {
-    char str_to_decode[] = "bc8 d";
-    printf("str before decoding: %s\n", str_to_decode);
+    char str_to_decode[] = "Btwlzx Dqqes Eq|pj2 Tjhvqujs Iqoqjy bpg Eqfxtx Xcwwtt";
+    printf("encoded str: %s\n", str_to_decode);
     decode(str_to_decode);
-    printf("str: %s\n", str_to_decode);
+    printf("decoded str: %s\n", str_to_decode);
 }
 
 /**
