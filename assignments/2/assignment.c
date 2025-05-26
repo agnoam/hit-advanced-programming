@@ -37,6 +37,7 @@ int is_same_letter(char a, char b);
 char* init_dynamic_str(int length);
 void append_char(char* str, char char_to_append, int pos, int max_length);
 void* modify_arr_length(void* arr, size_t shrinked_size);
+int my_str_cmp(char* a, char* b);
 
 /* ------------------------------- */
 int main() {
@@ -279,6 +280,30 @@ char** split(char letter, char* str, int* arr_length) {
 }
 
 /**
+ * Compares two strings.
+ *
+ * This function compares two null-terminated strings, `a` and `b`, character by character.
+ * It returns 1 if the strings are identical, and 0 otherwise. The comparison
+ * continues until a null terminator is encountered in either string or a
+ * mismatch is found.
+ *
+ * @param a A pointer to the first string to compare.
+ * @param b A pointer to the second string to compare.
+ * @return 1 if the strings are identical, 0 otherwise.
+ */
+int my_str_cmp(char* a, char* b) {
+	while (*a || *b) {
+		if (*a != *b)
+			return 0;
+		
+		a++; 
+		b++;
+	}
+
+	return 1;
+}
+
+/**
  * Creates or appends to a text file by taking user input line by line
  *
  * @param filename A null-terminated string representing the path to the target file.
@@ -311,11 +336,11 @@ void createFile(char* filename) {
 		if (!fgets(str, STDIN_BUFFER_SIZE, stdin))
 			break;
 
-		if (!strcmp(str, "\n"))
+		if (my_str_cmp(str, "\n"))
 			rewind(stdin);
 
 		is_first = 0;
-	} while (strcmp(str, "EOF\n")); // strcmp return 0 when both of the strings matching
+	} while (!my_str_cmp(str, "EOF\n"));
 	
 	printf("Closing the file\n");
 	fclose(target_file);
@@ -323,11 +348,6 @@ void createFile(char* filename) {
 
 /**
  * Finds the most common letter in a given text file, case-insensitively.
- *
- * This function reads the content of the specified file character by character,
- * counts the occurrences of each letter (without special characters), treating uppercase and
- * lowercase versions of the same letter as identical. It then determines and
- * returns the letter that appears most frequently.
  *
  * @param filename A null-terminated string representing the path to the file to be analyzed.
  * @return The most common letter (returned as an uppercase character) found in the file.
