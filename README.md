@@ -83,7 +83,7 @@ int calculate_retry_delay(int attempt_number) {
     return delay;
 }
 
-int main(void) {
+int main() {
     // Local variable in snake_case
     char user_name_buffer[MAX_BUFFER_SIZE];
 
