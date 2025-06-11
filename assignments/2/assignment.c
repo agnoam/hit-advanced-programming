@@ -354,14 +354,16 @@ void createFile(char* filename) {
  * Returns `\0` if the file cannot be opened or is empty.
  */
 char commonestLetter(char* filename) {
+	char current_char;
 	int letter_counter[26] = { 0 };
+	char max_letter = '\0';
+	int count = 0;
 	
 	FILE* target_file = fopen(filename, "r");
 	if (!target_file)
 		return '\0';
 
-	while(!feof(target_file)) {
-		char current_char = getc(target_file);
+	while ((current_char = getc(target_file)) != EOF) {
 		if (current_char >= 'a' && current_char <= 'z') {
 			letter_counter[current_char - 'a']++;
 		} else if (current_char >= 'A' && current_char <= 'Z') {
@@ -369,8 +371,6 @@ char commonestLetter(char* filename) {
 		} 
 	}
 
-	char max_letter = '\0';
-	int count = 0;
 	for (int i = 25; i >= 0; i--) {
 		if (letter_counter[i] > count) {
 			count = letter_counter[i];
