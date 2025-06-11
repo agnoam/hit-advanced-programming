@@ -17,13 +17,14 @@ typedef struct {
 
 // Q1:
 Node* JosephusPermutation(Node* lst, int m) {
+    int i;
     Node* new_list_head = NULL;
     Node* new_list_tail = NULL;
     Node* iterator = NULL;
 
     // Iterate until there is one element left
     do {
-        for (int i = 0; i < m-1; i++) {
+        for (i = 0; i < m-1; i++) {
             iterator = !iterator ? lst : iterator->next;
         }
         
@@ -227,14 +228,16 @@ char* my_strtok(char* sentence, char* separators) {
 
 /*
     Q6: 
-        Short answer: `'^^'`
+        Short answer: `"^^"`
         Explanation:
             Let's explore this bizzar print by braking it down to it's components.
             In C, the `^` operator stands for the XoR operation which is one of the base logical gates.
             Here is an example of usage: `A^b`.
             
-            Which actually means in simple terms: Check whether `A` and `b` does not have the same value.
-            So in case `A=1` and `b=2` the evaluation of `A^b` === 1 otherwise it will be 0.
+            Which actually means in simple terms: 
+            1. Convert each number to it's binary representation
+            2. Iterate each 2 bits and calculate the XoR of them
+            3. Cast the binary value to what type you want
             
             Now let's investigate the our case: `char s[]={'^','^','^'^'^','^'};`.
             As we clearly see, it's a static string definition. which holds 4 elements (2 elements surrounds each ',').
@@ -248,10 +251,10 @@ char* my_strtok(char* sentence, char* separators) {
             So the function should iterate over the char array `s` 
             letter-by-letter and print it to the terminal until it encounters the `'\0'`.
             But wait a minute, `'\0'` === `0`, so we actually prints all the elements (letters) until the 0.
-            Which are: the first two `'^'`.
+            Which are: the first two `'^'`, `"^^"`.
 */
 
-/* Auxilary functions (not in instructions) */
+/* Auxiliary functions (not in instructions) */
 
 Node* _constrcut_node(int value, Node* next) {
     Node* new_node = (Node*) malloc(sizeof(Node));
@@ -338,6 +341,11 @@ void _print_array(Film* arr, int length) {
 
 /********************************************/
 
+/* 
+    Disclaimer: The focus of those implementations are in the intruction-based functions implementations
+    All the memory managment in the prefix `_` and the main functions are intentionally ignored
+    To write less code as possible where it not actually needed.
+*/
 int main() {
     int input;
     printf("Enter question number to execute: ");
@@ -378,6 +386,9 @@ int main() {
                 free(word);
             }
             break;
+            
+        default:
+            printf("There is no such question implemented, exiting.");
     }
 
     return 0;

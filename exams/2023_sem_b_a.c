@@ -365,6 +365,11 @@ void _print_list(Item* list) {
     printf("\n");
 }
 
+/* 
+    Disclaimer: The focus of those implementations are in the intruction-based functions implementations
+    All the memory managment in the prefix `_` and the main functions are intentionally ignored
+    To write less code as possible where it not actually needed.
+*/
 int main() {
     int question_num;
     printf("Enter question number (1-3): ");
